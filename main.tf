@@ -55,12 +55,9 @@ resource "azurerm_container_registry" "rsg" {
   admin_enabled       = false
 }
 
-output "client_certificate" {
-  value = azurerm_kubernetes_cluster.rsg.kube_config.0.client_certificate
+resource "azurerm_storage_container" "example" {
+  name                  = "tfstate"
+  storage_account_name  = azurerm_storage_account.rsg.name
+  container_access_type = "private"
 }
 
-output "kube_config" {
-  value = azurerm_kubernetes_cluster.rsg.kube_config_raw
-
-  sensitive = true
-}
