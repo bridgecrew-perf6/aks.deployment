@@ -6,9 +6,9 @@ terraform {
     }
   }
   backend "azurerm" {
-    resource_group_name  = "aksrsg"
+    resource_group_name  = var.rsg
     location = "West Europe"
-    storage_account_name = "rsgsta"
+    storage_account_name = var.sta
     container_name       = "tfstate"
     key                  = ".tfstate"
   }
@@ -20,11 +20,11 @@ provider "azurerm" {
 }
 
 resource "azurerm_kubernetes_cluster" "rsg" {
-  name                = "myaks"
-  location            = azurerm.location
-  resource_group_name = azurerm.resource_group_name
+  name                = var.name
+  location            = var.location
+  resource_group_name = var.rsg
   dns_prefix          = "rsgmyaks"
-  kubernetes_version  = "1.21.9"
+  kubernetes_version  = var.kub_v
 
   default_node_pool {
     name       = "default"
@@ -42,8 +42,8 @@ resource "azurerm_kubernetes_cluster" "rsg" {
 }
 
 resource "azurerm_container_registry" "rsg" {
-  name                = "acr11767"
-  resource_group_name = azurerm.resource_group_name
+  name                = var.acr
+  resource_group_name = azurerm.rsg
   location            = azurerm.location
   sku                 = "Basic"
   admin_enabled       = false
